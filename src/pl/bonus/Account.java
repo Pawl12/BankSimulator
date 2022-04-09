@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Account implements AccountsThings{
 
     int gold;
+    int bonus;
     private int getBalance;
     private int previusTransaction;
     private String customerName;
