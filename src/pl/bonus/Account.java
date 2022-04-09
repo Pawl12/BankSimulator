@@ -4,8 +4,9 @@ import java.util.Scanner;
 
 public class Account implements AccountsThings{
 
-    int balance;
-    int previusTransaction;
+    int gold;
+    private int getBalance;
+    private int previusTransaction;
     private String customerName;
     private String customerID;
 
@@ -15,6 +16,30 @@ public class Account implements AccountsThings{
 
     public String getCustomerID() {
         return customerID;
+    }
+
+    public int getGetBalance() {
+        return getBalance;
+    }
+
+    public void setGetBalance(int getBalance) {
+        this.getBalance = getBalance;
+    }
+
+    public int getPreviusTransaction() {
+        return previusTransaction;
+    }
+
+    public void setPreviusTransaction(int previusTransaction) {
+        this.previusTransaction = previusTransaction;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     Account(String customerName, String customerID)
@@ -29,27 +54,43 @@ public class Account implements AccountsThings{
 
     }
 
+    public void depositWithExceptionHandling(int amount){
+
+        try{
+            deposit(amount);
+        }catch(IllegalArgumentException e){
+            System.out.println("Error while depositing money: " + e.getMessage());
+        }
+    }
+
     //Metoda do depozytu pieniedzy
     @Override
     public void deposit(int amount) throws IllegalArgumentException {
-        if(amount > 0)
-        {
-            balance = balance + amount;
+        if (amount > 0) {
+            setGetBalance(getGetBalance() + amount);
             previusTransaction = amount;
-        }
-        else
-        {
-            throw new IllegalArgumentException("U cannot deposit it!");
+        } else {
+            throw new IllegalArgumentException("Negative amount of money!");
         }
     }
+    public void withdrawWithExceptionHandling(int amount){
+
+        try{
+            withdraw(amount);
+        }catch(IllegalArgumentException e){
+            System.out.println("Error while withdraw money: " + e.getMessage());
+        }
+    }
+
 
     //Metoda do wybierania pieniedzy
     @Override
     public void withdraw(int amount) throws IllegalArgumentException {
+
+                previusTransaction = -amount;
         if(amount > 0 )
         {
-            balance = balance - amount;
-            previusTransaction = -amount;
+            getBalance = getBalance - amount;
         }
         else
         {
@@ -73,7 +114,7 @@ public class Account implements AccountsThings{
     @Override
     public void calculateInterests(int years) {
         double interestsRate = .0185;
-        double newBalance = (balance * interestsRate * years) + balance;
+        double newBalance = (getBalance * interestsRate * years) + getBalance;
         System.out.println("The current interests rate is " + (100 * interestsRate));
         System.out.println("After " + years + "years, you balance will be" + newBalance);
     }
@@ -82,6 +123,7 @@ public class Account implements AccountsThings{
     //MENU
 
     void showMenu(){
+
         char option = '\0';
         System.out.println("Welcome " + getCustomerName() + ".");
         System.out.println("Your id is " + getCustomerID() + ".");
@@ -105,20 +147,20 @@ public class Account implements AccountsThings{
             switch(option)
             {
                 case 'A':
-                    System.out.println("Your balance is " + balance);
+                    System.out.println("Your balance is " + getBalance);
                     break;
 
                 case 'B':
                     System.out.println("How much do u like to deposite: ");
                     int depositMoney = scan.nextInt();
-                    deposit(depositMoney);
+                    depositWithExceptionHandling(depositMoney);
                     System.out.println();
                     break;
 
                 case 'C':
                     System.out.println("How much do u like to withdraw: ");
                     int withdrawMoney = scan.nextInt();
-                    withdraw(withdrawMoney);
+                    withdrawWithExceptionHandling(withdrawMoney);
                     System.out.println();
                     break;
 
@@ -143,12 +185,9 @@ public class Account implements AccountsThings{
                     break;
 
             }
-
-
         }while(option != 'F');
-
     }
 
-    Scanner scan = new Scanner(System.in);
+   static Scanner scan = new Scanner(System.in);
 
 }
